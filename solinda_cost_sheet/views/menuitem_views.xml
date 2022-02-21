@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <menuitem id="cost_sheet_root_menu" name="Cost Sheet" web_icon="solinda_cost_sheet,static/description/icon.png"/>
+    <menuitem id="cost_sheet_main_menu" name="Cost Sheet" parent="cost_sheet_root_menu"/>
+    <menuitem id="project_cost_sheet_menu" name="Project" action="project.open_view_project_all_config" parent="cost_sheet_main_menu" />
+
+</odoo>
