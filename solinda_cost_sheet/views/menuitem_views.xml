@@ -2,7 +2,13 @@
 <odoo>
 
     <menuitem id="cost_sheet_root_menu" name="Cost Sheet" web_icon="solinda_cost_sheet,static/description/icon.png"/>
-    <menuitem id="cost_sheet_main_menu" name="Cost Sheet" parent="cost_sheet_root_menu"/>
-    <menuitem id="project_cost_sheet_menu" name="Project" action="project.open_view_project_all_config" parent="cost_sheet_main_menu" />
 
+    <menuitem id="cost_sheet_main_menu" name="Cost Sheet" parent="cost_sheet_root_menu"/>
+    <menuitem id="configuration_main_menu" name="Configuration" parent="cost_sheet_root_menu"/>
+
+
+    <menuitem id="sale_cost_sheet_menu" name="Quotation" action="sale.action_quotations_with_onboarding" parent="cost_sheet_main_menu" />
+    <menuitem id="crm_cost_sheet_menu" name="RAB" action="crm_rab_action" parent="cost_sheet_main_menu" />
+
+    <menuitem id="configuration_rab_template_cost_sheet_menu" name="RAB Template" action="rab_template_action" parent="configuration_main_menu" />
 </odoo>

@@ -1,3 +1,4 @@
 # -*- coding: utf-8 -*-
 
-from . import project
+from . import crm
+# from . import sale
