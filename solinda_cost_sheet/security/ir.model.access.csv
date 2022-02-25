@@ -1,3 +1,4 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_project_rab_user,solinda_project.project.rab,model_project_rab,base.group_user,1,1,1,1
 access_order_line_crm_user,solinda_cost_sheet.order.line.crm,model_order_line_crm,base.group_user,1,1,1,1
+access_rab_template_user,solinda_cost_sheet.rab.template,model_rab_template,base.group_user,1,1,1,1
