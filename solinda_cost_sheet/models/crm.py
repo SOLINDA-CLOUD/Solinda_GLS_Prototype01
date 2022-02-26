@@ -24,6 +24,11 @@ class CrmLead(models.Model):
 
     rab_line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
     sale_line_ids = fields.One2many('order.line.crm','crm_id', string='Sale Line Product')
+    rab_template_id = fields.Many2one('rab.template', string='RAB Template')
+    crm_type = fields.Selection([
+        ('crm', 'CRM'),
+        ('rab', 'RAB')
+    ], string='Crm Type')
     business_type_id = fields.Many2one('business.type', string='Business Type')
     ground_water = fields.Boolean('Ground Water')
     surface_water = fields.Selection([
@@ -93,6 +98,32 @@ class CrmLead(models.Model):
                 'price_unit': sale.price_unit
             }) for sale in self.sale_line_ids]
         return res
+    
+    @api.onchange('rab_template_id')
+    def _onchange_rab_template_id(self):
+        if self.rab_line_ids:
+            self.write({
+                'rab_line_ids': [(5,0,0)]
+            })
+        else:        
+            self.write({
+                'rab_line_ids': [(0,0,{
+                    'name': template.name,
+                    'display_type': template.display_type,
+                    'sequence': template.sequence,
+                    'product_id': template.product_id.id,
+                    'product_qty': template.product_qty,
+                    'uom_id': template.uom_id.id,
+                    'vol_factor': template.vol_factor,
+                    'item_factor': template.item_factor,
+                    'lab_factor': template.lab_factor,
+                    'start_date': template.start_date,
+                    'end_date': template.end_date,
+                    'no_pos': template.no_pos,
+                    'price_unit': template.price_unit,
+                    'margin_percent': template.margin_percent
+                }) for template in self.rab_template_id.rab_line_ids]
+        })
 
 
 
