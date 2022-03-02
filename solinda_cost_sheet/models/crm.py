@@ -22,7 +22,7 @@ class TransportSurvey(models.Model):
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    rab_line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
+    # rab_line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
     sale_line_ids = fields.One2many('order.line.crm','crm_id', string='Sale Line Product')
     rab_template_id = fields.Many2one('rab.template', string='RAB Template')
     crm_type = fields.Selection([
@@ -99,73 +99,6 @@ class CrmLead(models.Model):
             }) for sale in self.sale_line_ids]
         return res
     
-    @api.onchange('rab_template_id')
-    def _onchange_rab_template_id(self):
-        if self.rab_line_ids:
-            self.write({
-                'rab_line_ids': [(5,0,0)]
-            })
-        else:        
-            self.write({
-                'rab_line_ids': [(0,0,{
-                    'name': template.name,
-                    'display_type': template.display_type,
-                    'sequence': template.sequence,
-                    'product_id': template.product_id.id,
-                    'product_qty': template.product_qty,
-                    'uom_id': template.uom_id.id,
-                    'vol_factor': template.vol_factor,
-                    'item_factor': template.item_factor,
-                    'lab_factor': template.lab_factor,
-                    'start_date': template.start_date,
-                    'end_date': template.end_date,
-                    'no_pos': template.no_pos,
-                    'price_unit': template.price_unit,
-                    'margin_percent': template.margin_percent
-                }) for template in self.rab_template_id.rab_line_ids]
-        })
-
-
-
-# RAB 
-
-class ProjectRab(models.Model):
-    _name = 'project.rab'
-    _description = 'Project RAB'
-
-    crm_id = fields.Many2one('crm.lead', string='CRM')
-    rab_template_id = fields.Many2one('rab.template', string='RAB Template')
-    # project_id = fields.Many2one('project.project', string='Project')
-    display_type = fields.Selection([
-        ('line_section', "Section"),
-        ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
-    sequence = fields.Integer('Sequence')
-
-    product_id = fields.Many2one('product.product', string='Product')
-    name = fields.Char('Description')
-    product_qty = fields.Float('Product Qty')
-    uom_id = fields.Many2one('uom.uom', string='UoM')
-    vol_factor = fields.Float('Volume Factor')
-    item_factor = fields.Float('Item Factor')
-    lab_factor = fields.Float('Lab Factor')
-    price_unit = fields.Float('Price')
-    start_date = fields.Date('Start Date')
-    end_date = fields.Date('Finish Date')
-    no_pos = fields.Char('No')
-    margin = fields.Float('Margin',compute='_compute_price')
-    margin_percent = fields.Float( string='Margin Percent')
-    price_subtotal = fields.Float(compute='_compute_price', string='Price Subtotal')
-
-    
-    @api.depends('margin_percent','price_unit')
-    def _compute_price(self):
-        for this in self:
-            amount = 0
-            amount = this.price_unit * this.margin_percent
-            this.margin = amount
-            this.price_subtotal = this.price_unit + amount
-
-
 
 class OrderLineCrm(models.Model):
     _name = 'order.line.crm'

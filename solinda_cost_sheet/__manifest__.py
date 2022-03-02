@@ -20,13 +20,16 @@
     'version': '0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['base','project','sale_margin','crm'],
+    'depends': ['base','project','sale','crm','purchase_requisition'],
 
     # always loaded
     'data': [
         'security/ir.model.access.csv',
         'views/crm_views.xml',
         'views/rab_template_views.xml',
+        'views/cost_sheet_views.xml',
+        'views/purchase_requisition_views.xml',
+        'views/sequence_data.xml',
         'views/menuitem_views.xml',
         'views/templates.xml',
     ],
