@@ -35,30 +35,30 @@ class CostSheet(models.Model):
     def action_to_draft(self):
         self.write({'state':'draft'})
     
-    def create_rap(self):
-        purchase = self.env['purchase.requisition'].create({
-            'crm_id': self.crm_id.id,
-            'origin': self.name,
-            'date_end' : fields.Date.today,
-            'ordering_date' : fields.Date.today,
-            'schedule_date' : fields.Date.today,
-            'line_ids': [(0,0,{
-                'product_id': template.product_id.id,
-                'product_qty': template.product_qty,
-                'product_uom_id': template.uom_id.id,
-                'product_description_variants' : template.name,
-                'price_unit': template.price_unit
-            }) for template in self.rab_line_ids]
+    # def create_rap(self):
+    #     purchase = self.env['purchase.requisition'].create({
+    #         'crm_id': self.crm_id.id,
+    #         'origin': self.name,
+    #         'date_end' : fields.Datetime.today,
+    #         'ordering_date' : fields.Date.today,
+    #         'schedule_date' : fields.Date.today,
+    #         'line_ids': [(0,0,{
+    #             'product_id': template.product_id.id,
+    #             'product_qty': template.product_qty,
+    #             'product_uom_id': template.uom_id.id,
+    #             'product_description_variants' : template.name,
+    #             'price_unit': template.price_unit
+    #         }) for template in self.rab_line_ids]
 
-        })
-        self.write({'purchase_id':purchase.id})
+    #     })
+    #     self.write({'purchase_id':purchase.id})
         
-        return {
-            "type": "ir.actions.act_window",
-            "view_mode": "form",
-            "res_model": "purchase.requisition",
-            "res_id": purchase.id
-        }
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "view_mode": "form",
+    #         "res_model": "purchase.requisition",
+    #         "res_id": purchase.id
+    #     }
 
     def action_view_crm(self):
         return {
@@ -70,8 +70,10 @@ class CostSheet(models.Model):
 
     @api.model
     def create(self, vals):
-        vals["name"] = self.env["ir.sequence"].next_by_code("cost.sheet.seq")
-        return super(CostSheet, self).create(vals)
+        res = super(CostSheet, self).create(vals)
+        res.name = self.env["ir.sequence"].next_by_code("cost.sheet.seq")
+        res.crm_id.rab_id = res.id
+        return res 
     
     @api.depends('rab_line_ids.price_subtotal','rab_line_ids.margin','rab_line_ids.price_unit')
     def _compute_total_amount(self):

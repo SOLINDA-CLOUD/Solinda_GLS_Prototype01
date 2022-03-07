@@ -23,6 +23,7 @@ class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
     # rab_line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
+    rab_id = fields.Many2one('cost.sheet', string='RAB')
     sale_line_ids = fields.One2many('order.line.crm','crm_id', string='Sale Line Product')
     rab_template_id = fields.Many2one('rab.template', string='RAB Template')
     crm_type = fields.Selection([
@@ -87,17 +88,17 @@ class CrmLead(models.Model):
     description_remarks = fields.Html('Additional Remarks or Documentations (Pictures, Sketches)')
     attachment_remarks = fields.Binary('Attachment')
 
-    def action_new_quotation(self):
-        res = super(CrmLead, self).action_new_quotation()
-        if self.sale_line_ids:
-            res['context']['default_order_line'] = [(0,0,{
-                'product_id': sale.product_id.id,
-                'product_uom_qty': sale.product_uom_qty,
-                'product_uom': sale.product_uom.id,
-                'name' : sale.name,
-                'price_unit': sale.price_unit
-            }) for sale in self.sale_line_ids]
-        return res
+    # def action_new_quotation(self):
+    #     res = super(CrmLead, self).action_new_quotation()
+    #     if self.sale_line_ids:
+    #         res['context']['default_order_line'] = [(0,0,{
+    #             'product_id': sale.product_id.id,
+    #             'product_uom_qty': sale.product_uom_qty,
+    #             'product_uom': sale.product_uom.id,
+    #             'name' : sale.name,
+    #             'price_unit': sale.price_unit
+    #         }) for sale in self.sale_line_ids]
+    #     return res
     
 
 class OrderLineCrm(models.Model):

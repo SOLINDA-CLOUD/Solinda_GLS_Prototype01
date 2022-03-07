@@ -27,7 +27,6 @@
                         <button string="Submit" name="action_submit" states="draft" type="object" class="oe_highlight"/>
                         <button string="Done" name="action_done" states="submit" type="object" class="oe_highlight"/>
                         <button string="Set to Draft" name="action_to_draft" states="done" type="object"/>
-                        <button string="Create RAP" name="create_rap" states="done" type="object"/>
                         <!-- <button string="Submit" name="action_submit" states="draft" type="object" class="oe_highlight"/> -->
                         <field name="state" widget="statusbar" statusbar_visible="draft,submit,done" />
                     </header>
