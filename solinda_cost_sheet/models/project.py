@@ -20,7 +20,7 @@ class ProjectProject(models.Model):
                 'product_uom_id': template.uom_id.id,
                 'product_description_variants' : template.name,
                 'price_unit': template.price_unit
-            }) for template in self.rab_id.rab_line_ids]
+            }) for template in self.rab_id.rab_line_ids if template.product_id]
 
         })
         self.write({'purchase_id':purchase.id})
