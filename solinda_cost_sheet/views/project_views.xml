@@ -8,12 +8,12 @@
 
                 <field name="tag_ids" position="after">
                     <field name="rab_id" />
-                    <field name="purchase_id" />
+                    <field name="purchase_id" readonly="1" />
                 </field>
                 <xpath expr="//header" position="inside">
 
                     <!-- <button string="Create RAP" name="create_rap" attrs="{'invisible':[('rab_id','=',False)]}" type="object"/> -->
-                    <button string="Create RAP" name="create_rap" type="object"/>
+                    <button string="Create RAP" name="create_rap" type="object" attrs="{'invisible':[('rab_id','=', False)]}"/>
                 </xpath>
 
             </field>

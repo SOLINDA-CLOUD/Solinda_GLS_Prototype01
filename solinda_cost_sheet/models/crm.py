@@ -120,14 +120,6 @@ class OrderLineCrm(models.Model):
     sequence = fields.Integer(string='Sequence', default=10)
     price_unit = fields.Float('Unit Price', required=True, digits='Product Price', default=0.0)
 
-class RabTemplate(models.Model):
-    _name = 'rab.template'
-    _description = 'RAB Template'
-
-    name = fields.Char('Name of Template')
-    rab_line_ids = fields.One2many('project.rab', 'rab_template_id', string='Rab Line')
-
-    
 
 
 

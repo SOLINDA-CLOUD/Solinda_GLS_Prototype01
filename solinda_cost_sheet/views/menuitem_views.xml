@@ -12,4 +12,11 @@
     <menuitem id="rap_cost_sheet_menu" name="RAP" action="cost_sheet_rap_action" parent="cost_sheet_main_menu" sequence="3" />
 
     <menuitem id="configuration_rab_template_cost_sheet_menu" name="RAB Template" action="rab_template_action" parent="configuration_main_menu" />
+
+
+    <!-- CRM -->
+    <!-- <menuitem id="kuesioner_menu" name="Kuesioner" parent="crm.crm_menu_config" sequence="99">
+        <menuitem id="configuration_rab_template_cost_sheet_menu" name="RAB Template" action="rab_template_action" parent="kuesioner_menu" />
+
+    </menuitem> -->
 </odoo>

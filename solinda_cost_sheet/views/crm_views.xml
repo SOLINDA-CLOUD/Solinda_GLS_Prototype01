@@ -3,26 +3,23 @@
 
     <data>
 
-
-
-
         <record id="crm_lead_view_form_inherit_crm" model="ir.ui.view">
             <field name="name">crm.lead.view.form.inherit</field>
             <field name="model">crm.lead</field>
             <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
-                <xpath expr="//div[2]/h2" position="attributes">
+                <!-- <xpath expr="//div[2]/h2" position="attributes">
                     <attribute name="attrs">{'invisible':[('crm_type','!=', 'crm')]}</attribute>
-                </xpath>
+                </xpath> -->
 
                 <field name="tag_ids" position="after">
                     <!-- <field name="rab_template_id" /> -->
-                    <field name="crm_type" invisible="1" />
+                    <!-- <field name="crm_type" invisible="1" /> -->
                     <field name="rab_id" />
                 </field>
                 <xpath expr="//notebook" position="inside">
 
-                    <page string="Kuesioner" attrs="{'invisible':[('crm_type','!=', 'crm')]}">
+                    <page string="Kuesioner">
                         <group string="Type of business">
                             <field name="business_type_id" />
                         </group>
@@ -59,14 +56,14 @@
                             <field name="source_power" />
                         </group>
                     </page>
-                    <page string="Description of the Area" attrs="{'invisible':[('crm_type','!=', 'crm')]}">
+                    <page string="Description of the Area">
                         <group>
                             <field name="description_area" colspan="4" nolabel="1"/>
                             <field name="is_attachment" />
                             <field name="attachment_area" widget="image" attrs="{'invisible':[('is_attachment','=',False)]}" nolabel="1" colspan="4"/>
                         </group>
                     </page>
-                    <page string="Description of the Area" attrs="{'invisible':[('crm_type','!=', 'crm')]}">
+                    <page string="Description of the Area">
                         <group string="Additional Remarks or Documentations (Pictures, Sketches)">
                             <field name="description_remarks" nolabel="1" colspan="4"/>
                             <field name="attachment_remarks" />
