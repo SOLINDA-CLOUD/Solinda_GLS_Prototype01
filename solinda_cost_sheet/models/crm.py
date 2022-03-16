@@ -22,7 +22,7 @@ class TransportSurvey(models.Model):
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
-    # rab_line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
+    # line_ids = fields.One2many('project.rab', 'crm_id', string='RAB')   
     rab_id = fields.Many2one('cost.sheet', string='RAB')
     sale_line_ids = fields.One2many('order.line.crm','crm_id', string='Sale Line Product')
     rab_template_id = fields.Many2one('rab.template', string='RAB Template')

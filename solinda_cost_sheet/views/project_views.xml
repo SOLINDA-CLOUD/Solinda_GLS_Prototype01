@@ -8,7 +8,7 @@
 
                 <field name="tag_ids" position="after">
                     <field name="rab_id" />
-                    <field name="purchase_id" readonly="1" />
+                    <field name="rap_id" readonly="1" />
                 </field>
                 <xpath expr="//header" position="inside">
 

@@ -15,7 +15,7 @@
             </field>
         </record>
 
-        <record id="cost_sheet_rap_action" model="ir.actions.act_window">
+        <record id="cost_sheet_rap_plan_action" model="ir.actions.act_window">
             <field name="name">RAP</field>
             <field name="res_model">purchase.requisition</field>
             <field name="view_mode">tree,form</field>

@@ -5,3 +5,6 @@ access_cost_sheet_user,solinda_cost_sheet.cost.sheet,model_cost_sheet,base.group
 access_business_type_user,solinda_cost_sheet.business.type,model_business_type,base.group_user,1,1,1,1
 access_wastewater_type_user,solinda_cost_sheet.wastewater.type,model_wastewater_type,base.group_user,1,1,1,1
 access_transport_survey_user,solinda_cost_sheet.transport.survey,model_transport_survey,base.group_user,1,1,1,1
+solinda_cost_sheet.access_approval_approval,access_approval_approval,solinda_cost_sheet.model_approval_approval,base.group_user,1,1,1,1
+solinda_cost_sheet.access_approver_line,access_approver_line,solinda_cost_sheet.model_approver_line,base.group_user,1,1,1,1
+solinda_cost_sheet.access_order_line_crm,access_order_line_crm,solinda_cost_sheet.model_order_line_crm,base.group_user,1,1,1,1

@@ -27,7 +27,7 @@
                         </div>
                         <notebook>
                             <page string="RAB">
-                                <field name="rab_line_ids" widget="section_and_note_one2many">
+                                <field name="line_ids" widget="section_and_note_one2many">
                                     <tree editable="bottom">
                                         <control>
                                             <create name="add_product_control" string="Add a product"/>

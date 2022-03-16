@@ -1,35 +1,27 @@
 from odoo import _, api, fields, models
 
-class CostSheet(models.Model):
-    _name = 'cost.sheet'
-    _description = 'Cost Sheet'
+class CsRAP(models.Model):
+    _name = 'rap.rap'
+    _description = 'RAP'
     _inherit = ['portal.mixin','mail.thread', 'mail.activity.mixin']
     
     name = fields.Char('Name',tracking=True)
     crm_id = fields.Many2one('crm.lead', string='CRM',tracking=True)
-    partner_id = fields.Many2one('res.partner', string='Customer')
+    project_id = fields.Many2one('project.project', string='Project')
     date_document = fields.Date('Request Date',tracking=True,default=fields.Date.today)
     user_id = fields.Many2one('res.users', string='Responsible',default=lambda self:self.env.user.id)
-    rab_template_id = fields.Many2one('rab.template', string='RAB Template',tracking=True)
-    line_ids = fields.One2many('project.rab', 'cost_sheet_id', string='RAB')  
+    # rab_template_id = fields.Many2one('rab.template', string='RAB Template',tracking=True)
+    line_ids = fields.One2many('project.rap', 'rap_id', string='RAP')  
     note = fields.Text('Term and condition')
     approval_id = fields.Many2one('approval.approval', string='Approval')
     approver_id = fields.Many2one('approver.line', string='Approver')
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submited'),
-        ('done', 'Done'),
-        ('cancel', 'Canceled'),
-    ], string='Status',tracking=True, default="draft")
-    
-    state_rap = fields.Selection([
-        ('draft', 'Draft'),
-        ('submit', 'Submited'),
         ('waiting', 'Waiting Approval'),
         ('done', 'Done'),
         ('cancel', 'Canceled'),
     ], string='Status',tracking=True, default="draft")
-    
 
     # purchase_id = fields.Many2one('purchase.requisition', string='Purchase')
 
@@ -37,17 +29,7 @@ class CostSheet(models.Model):
     total_margin = fields.Float(compute='_compute_total_amount', string='Margin',store=True)
     total_without_margin = fields.Float(compute='_compute_total_amount', string='Price Subtotal',store=True)
     currency_id = fields.Many2one('res.currency', string='currency',default=lambda self:self.env.company.currency_id.id)
-    type = fields.Selection([
-        ('rab', 'RAB'),
-        ('rap', 'RAP'),
-
-    ], string='Type')
     is_approver = fields.Boolean(compute='_compute_is_approver', string='Is Approver')
-    
-    @api.onchange('crm_id')
-    def _onchange_crm_id(self):
-        if self.crm_id and self.crm_id.partner_id:
-            self.partner_id = self.crm_id.partner_id.id
     
     @api.depends('approver_id','approval_id')
     def _compute_is_approver(self):
@@ -69,7 +51,7 @@ class CostSheet(models.Model):
                     request.write({"approver_id": approver_id.id})
                     # request.notify()
                 else:
-                    request.write({"state_rap": "done","approver_id":False })
+                    request.write({"state": "done","approver_id":False })
 
             else:
                 approver_id = request.approval_id.approver_line_ids.search([("amount", "<=", request.total_amount)],order="sequence ASC",limit=1)
@@ -77,14 +59,14 @@ class CostSheet(models.Model):
                     request.write(
                         {
                             "approver_id": approver_id.id,
-                            "state_rap": "waiting",
+                            "state": "waiting",
                         }
                     )
                     # request.notify()
                 else:
                     request.write(
                         {
-                            "state_rap": "done",
+                            "state": "done",
                             "approver_id":False
                         }
                     )
@@ -99,7 +81,7 @@ class CostSheet(models.Model):
     def action_done(self):
         self.write({'state':'done'})
     def action_to_draft(self):
-        self.write({'state_rap':'draft','approval_id':False,'approver_id':False})
+        self.write({'state':'draft','approval_id':False,'approver_id':False})
     
     # def create_rap(self):
     #     purchase = self.env['purchase.requisition'].create({
@@ -126,21 +108,18 @@ class CostSheet(models.Model):
     #         "res_id": purchase.id
     #     }
 
-    def action_view_crm(self):
-        return {
-            "type": "ir.actions.act_window",
-            "view_mode": "form",
-            "res_model": "crm.lead",
-            "res_id": self.crm_id.id
-        }
-        
-    def action_print_rab(self):
-        return self.env.ref('solinda_cost_sheet.action_report_cost_sheet').report_action(self)
+    # def action_view_crm(self):
+    #     return {
+    #         "type": "ir.actions.act_window",
+    #         "view_mode": "form",
+    #         "res_model": "crm.lead",
+    #         "res_id": self.crm_id.id
+    #     }
 
     @api.model
     def create(self, vals):
-        res = super(CostSheet, self).create(vals)
-        res.name = self.env["ir.sequence"].next_by_code("cost.sheet.seq")
+        res = super(CsRAP, self).create(vals)
+        res.name = self.env["ir.sequence"].next_by_code("rap.rap")
         res.crm_id.rab_id = res.id
         return res 
     
@@ -180,12 +159,10 @@ class CostSheet(models.Model):
 # RAB 
 
 class ProjectRab(models.Model):
-    _name = 'project.rab'
-    _description = 'Project RAB'
+    _name = 'project.rap'
+    _description = 'Project RAP'
 
-    cost_sheet_id = fields.Many2one('cost.sheet', string='Cost Sheet')
-    rab_template_id = fields.Many2one('rab.template', string='RAB Template')
-    # project_id = fields.Many2one('project.project', string='Project')
+    rap_id = fields.Many2one('rap.rap', string='RAP')
     display_type = fields.Selection([
         ('line_section', "Section"),
         ('line_note', "Note")], default=False, help="Technical field for UX purpose.")
@@ -218,13 +195,3 @@ class ProjectRab(models.Model):
             this.margin = amount
             this.price_subtotal = this.price_unit + amount
 
-
-
-class RabTemplate(models.Model):
-    _name = 'rab.template'
-    _description = 'RAB Template'
-
-    name = fields.Char('Name of Template')
-    line_ids = fields.One2many('project.rab', 'rab_template_id', string='Rab Line')
-
-    

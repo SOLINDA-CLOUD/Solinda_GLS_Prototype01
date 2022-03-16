@@ -5,29 +5,52 @@ class ProjectProject(models.Model):
 
 
     rab_id = fields.Many2one('cost.sheet',related='sale_order_id.rab_id', string='RAB',store=True)
+    rap_id = fields.Many2one('cost.sheet', string='RAP Plan')
     purchase_id = fields.Many2one('purchase.requisition', string='RAP')
 
     def create_rap(self):
-        purchase = self.env['purchase.requisition'].create({
-            'crm_id': self.sale_order_id.rab_id.crm_id.id,
-            'origin': self.name,
-            'date_end' : fields.Datetime.now(),
-            'ordering_date' : fields.Date.today(),
-            'schedule_date' : fields.Date.today(),
-            'line_ids': [(0,0,{
-                'product_id': template.product_id.id,
-                'product_qty': template.product_qty,
-                'product_uom_id': template.uom_id.id,
-                'product_description_variants' : template.name,
-                'price_unit': template.price_unit
-            }) for template in self.rab_id.rab_line_ids if template.product_id]
+        # purchase = self.env['purchase.requisition'].create({
+        #     'crm_id': self.sale_order_id.rab_id.crm_id.id,
+        #     'origin': self.name,
+        #     'date_end' : fields.Datetime.now(),
+        #     'ordering_date' : fields.Date.today(),
+        #     'schedule_date' : fields.Date.today(),
+        #     'line_ids': [(0,0,{
+        #         'product_id': template.product_id.id,
+        #         'product_qty': template.product_qty,
+        #         'product_uom_id': template.uom_id.id,
+        #         'product_description_variants' : template.name,
+        #         'price_unit': template.price_unit
+        #     }) for template in self.rab_id.line_ids if template.product_id]
+        # })
+        rap = self.env['cost.sheet'].create({
+                'date_document': fields.Date.today(),
+                'type':'rap',
+                'line_ids' : [(0,0,{
+                  'name': data.name,
+                    'display_type': data.display_type,
+                    'sequence': data.sequence,
+                    'product_id': data.product_id.id,
+                    'product_qty': data.product_qty,
+                    'uom_id': data.uom_id.id,
+                    'vol_factor': data.vol_factor,
+                    'item_factor': data.item_factor,
+                    'lab_factor': data.lab_factor,
+                    'start_date': data.start_date,
+                    'end_date': data.end_date,
+                    'no_pos': data.no_pos,
+                    'price_unit': data.price_unit,
+                    'margin_percent': data.margin_percent
+                }) for data in self.rab_id.line_ids]
 
         })
-        self.write({'purchase_id':purchase.id})
+        
+        self.write({'rap_id':rap.id})
         
         return {
             "type": "ir.actions.act_window",
             "view_mode": "form",
-            "res_model": "purchase.requisition",
-            "res_id": purchase.id
+            "res_model": "cost.sheet",
+            'view_id' : self.env.ref('solinda_cost_sheet.cost_sheet_rap_view_form').id,
+            "res_id": rap.id
         }
